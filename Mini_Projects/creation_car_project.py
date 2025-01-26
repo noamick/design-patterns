@@ -191,15 +191,50 @@ class Singleton:
 
 
 if __name__ == '__main__':
-    factory = HyundaiFactory()
-    car_without_a_wheel = factory.create_car()
-    car_with_a_wheel = factory.create_car_with_wheel()
-    print('car_without_a_wheel', car_without_a_wheel)
-    print('car_with_a_wheel', car_with_a_wheel)
+    # Singleton: VehicleFactoryManager instance to manage factories
+    class VehicleFactoryManager(Singleton):
+        def __init__(self):
+            if not hasattr(self, "factories"):
+                self.factories = []
 
-    factory = HuyndaiFactory()
-    factory.create_car_and_move()
+        def register_factory(self, factory: CarFactory):
+            self.factories.append(factory)
 
-    rect1 = Rectangle(2, 2, 2, 2)
-    rect2 = rect1.clone()
-    
+        def list_factories(self):
+            return self.factories
+
+    factory_manager = VehicleFactoryManager.get_instance()
+
+    # Abstract Factory: Create cars and wheels
+    hyundai_factory = HyundaiFactory()
+    factory_manager.register_factory(hyundai_factory)
+
+    # Create a car with and without wheels using Abstract Factory
+    print("Abstract Factory Example:")
+    car_with_wheel = hyundai_factory.create_car_with_wheel()
+    print(f"Car with wheel: {car_with_wheel}")
+
+    car_without_wheel = hyundai_factory.create_car()
+    print(f"Car without wheel: {car_without_wheel}")
+
+    # Factory Method: Create and move a Hyundai car
+    print("\nFactory Method Example:")
+    hyundai_car_factory = HuyndaiFactory()
+    hyundai_car_factory.create_car_and_move()
+
+    # Builder: Construct a car showroom with homes (simulation)
+    print("\nBuilder Example:")
+    apartment = ApartmentDirector.create_home()
+    print(f"Home constructed: {apartment.roof}, rooms: {apartment.rooms}, garden: {apartment.garden}")
+
+    # Prototype: Clone a car design
+    print("\nPrototype Example:")
+    prototype_rectangle = Rectangle(3, 4, 10, 20)
+    cloned_rectangle = prototype_rectangle.clone()
+    print(f"Original Rectangle: {vars(prototype_rectangle)}")
+    print(f"Cloned Rectangle: {vars(cloned_rectangle)}")
+
+    # Singleton: Verify factory manager instance is the same
+    print("\nSingleton Example:")
+    another_factory_manager = VehicleFactoryManager.get_instance()
+    print(f"Are both factory manager instances the same? {factory_manager is another_factory_manager}")
